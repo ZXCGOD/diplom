@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -100,17 +101,16 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
 
 
-        chatAdapter = new ChatAdapter( getLayoutInflater());
+        chatAdapter = new ChatAdapter( getLayoutInflater(),this);
         recyclerView.setAdapter(chatAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
 
+    }
 
-
-
-
-
-
+    public static void toChatActivity(Context context) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        context.startActivity(intent);
     }
 }

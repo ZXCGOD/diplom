@@ -2,10 +2,12 @@ package com.example.chat_app;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,13 +27,11 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
     private LayoutInflater inflater;
     private List<JSONObject> chats = new ArrayList<>();
+    private Context parent;
 
-    public ChatAdapter(LayoutInflater inflater) {
+    public ChatAdapter(LayoutInflater inflater,Context parent) {
         this.inflater = inflater;
-    }
-
-    ChatAdapter(Context context) {
-        this.inflater = LayoutInflater.from(context);
+        this.parent = parent;
     }
 
     private  class ChatHolder extends RecyclerView.ViewHolder {
@@ -44,6 +44,28 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
             nameTxt = itemView.findViewById(R.id.nameTxt);
             idTxt = itemView.findViewById(R.id.idTxt);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int positionIndex = getAdapterPosition();
+                    JSONObject chat = chats.get(positionIndex);
+                    String id = null;
+                    String name = null;
+                    try {
+                        id = chat.getString("id");
+                        name = chat.getString("name");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    Chat.init(id,name);
+                    Intent intent = new Intent(parent, ChatActivity.class);
+
+                    ListOfChatsActivity.toChatActivity(parent);
+
+                }
+            });
         }
     }
 

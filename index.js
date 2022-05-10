@@ -87,7 +87,15 @@ wsServer.on('request', (req) => {
             }
                
             );
-        }
+        }else if(mydata.purpose == "message"){
+
+        connectionToDB.query(
+              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +  mydata.id_user + ' , "' + mydata.message + '")',
+              function(err, results, fields) {
+                
+               }
+            )
+
         connections.forEach(element => {
             if (element != connection){
                 element.sendUTF(mes.utf8Data)
@@ -95,7 +103,39 @@ wsServer.on('request', (req) => {
                
             }
 
-        })
+        })}
+        else if(mydata.purpose == "getListOfMessages"){
+
+        connectionToDB.query(
+              'SELECT messages.id,id_chat,id_user,users.name,message FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id;',
+              function(err, results, fields) {
+
+                  results.forEach(function(element,index){
+                        
+                         let row = "{id: '" + element.id + "', id_chat : '" + element.id_chat + "', id_user : '" + element.id_user + "' , name_user : '" + element.name + "', message : '" + element.message + "'}";
+                   
+                    console.log(row);
+
+                    connection.sendUTF(
+                        row
+                    );
+
+                    });
+
+                
+               }
+            )
+
+        connections.forEach(element => {
+            if (element != connection){
+                element.sendUTF(mes.utf8Data)
+            }   else {
+               
+            }
+
+        })}
+
+       
     })
 
     connection.on('close', (resCode, des) => {

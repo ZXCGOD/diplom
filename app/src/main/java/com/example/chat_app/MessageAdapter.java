@@ -151,32 +151,33 @@ public class MessageAdapter extends RecyclerView.Adapter {
                     SentMessageHolder messageHolder = (SentMessageHolder) holder;
                     messageHolder.messageTxt.setText(message.getString("message"));
 
-                } else {
-
-                    SentImageHolder imageHolder = (SentImageHolder) holder;
-                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
-
-                    imageHolder.imageView.setImageBitmap(bitmap);
-
                 }
+//                else {
+//
+//                    SentImageHolder imageHolder = (SentImageHolder) holder;
+//                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
+//
+//                    imageHolder.imageView.setImageBitmap(bitmap);
+//
+//                }
 
             } else {
 
                 if (message.has("message")) {
 
                     ReceivedMessageHolder messageHolder = (ReceivedMessageHolder) holder;
-                    messageHolder.nameTxt.setText(message.getString("name"));
+                    messageHolder.nameTxt.setText(message.getString("name_user"));
                     messageHolder.messageTxt.setText(message.getString("message"));
-
-                } else {
-
-                    ReceivedImageHolder imageHolder = (ReceivedImageHolder) holder;
-                    imageHolder.nameTxt.setText(message.getString("name"));
-
-                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
-                    imageHolder.imageView.setImageBitmap(bitmap);
-
                 }
+//                else {
+//
+//                    ReceivedImageHolder imageHolder = (ReceivedImageHolder) holder;
+//                    imageHolder.nameTxt.setText(message.getString("name"));
+//
+//                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
+//                    imageHolder.imageView.setImageBitmap(bitmap);
+//
+//                }
 
             }
         } catch (JSONException e) {
