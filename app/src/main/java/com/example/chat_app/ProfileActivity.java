@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,15 +17,16 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
-public class RegistrationActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity {
 
     private WebSocket webSocket;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.activity_profile);
 
 
 
@@ -56,7 +56,7 @@ public class RegistrationActivity extends AppCompatActivity {
             super.onOpen(webSocket, response);
 
             runOnUiThread(() -> {
-                Toast.makeText(RegistrationActivity.this,
+                Toast.makeText(ProfileActivity.this,
                         "Socket Connection Successful!",
                         Toast.LENGTH_SHORT).show();
 
@@ -92,32 +92,40 @@ public class RegistrationActivity extends AppCompatActivity {
             EditText editTextPassword = findViewById(R.id.editTextPassword);
             EditText editTextRepeatPassword = findViewById(R.id.editTextRepeatPassword);
 
+            editTextEmail.setText(User.instance().getEmail());
+            editTextName.setText(User.instance().getName());
 
 
-            findViewById(R.id.btnRegister).setOnClickListener(v -> {
-
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("purpose", "registration");
-                    jsonObject.put("email", editTextEmail.getText().toString());
-                    jsonObject.put("name", editTextName.getText().toString());
-                    jsonObject.put("password", editTextPassword.getText().toString());
-                    if(editTextPassword.getText().toString().equals(editTextRepeatPassword.getText().toString())) {
-                        webSocket.send(jsonObject.toString());
-                        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-
-                        startActivity(intent);
-                    } else  {
-                        Toast.makeText(RegistrationActivity.this,
-                                "Пароли не совпадают",
-                                Toast.LENGTH_SHORT).show();
-                    }
+            findViewById(R.id.btnEdit).setOnClickListener(v -> {
 
 
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(editTextPassword.getText().length() < 1){
+                    Toast.makeText(ProfileActivity.this,
+                            "Пароль пустой",
+                            Toast.LENGTH_SHORT).show();
                 }
+                JSONObject jsonObject = new JSONObject();
+//                try {
+//                    jsonObject.put("purpose", "editProfile");
+//                    jsonObject.put("email", editTextEmail.getText().toString());
+//                    jsonObject.put("name", editTextName.getText().toString());
+//                    jsonObject.put("password", editTextPassword.getText().toString());
+//                    if(editTextPassword.getText().toString().equals(editTextRepeatPassword.getText().toString())) {
+//                        webSocket.send(jsonObject.toString());
+//                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+//
+//                        startActivity(intent);
+//                    } else  {
+//                        Toast.makeText(ProfileActivity.this,
+//                                "Пароли не совпадают",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+
+
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
 
             });
 

@@ -1,5 +1,7 @@
 package com.example.chat_app;
 
+
+import static com.example.chat_app.Constants.SERVER_PATH;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,7 +37,6 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
     private String name;
     private WebSocket webSocket;
-    private String SERVER_PATH = "ws://10.0.2.2:3000";
     private EditText messageEdit;
     private View sendBtn, pickImgBtn, backImgBtn;
     private RecyclerView recyclerView;
@@ -100,12 +101,13 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
     private class SocketListener extends WebSocketListener {
 
+
+
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             super.onOpen(webSocket, response);
 
             runOnUiThread(() -> {
-                getListOfUsersInChat();
                 getListOfMessages();
 
                 Toast.makeText(ChatActivity.this,
@@ -182,7 +184,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
             JSONObject jsonObject = new JSONObject();
             try {
                 jsonObject.put("purpose", "message");
-                jsonObject.put("name", name);
+                jsonObject.put("name_user", name);
                 jsonObject.put("id_user", User.instance().getId());
                 jsonObject.put("id_chat", Chat.instance().getId());
                 jsonObject.put("message", messageEdit.getText().toString());
@@ -260,6 +262,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
         try {
             jsonObject.put("purpose", "getListOfMessages");
             jsonObject.put("id_user", User.instance().getId());
+            jsonObject.put("name_user",User.instance().getName());
             jsonObject.put("id_chat", Chat.instance().getId());
 
             webSocket.send(jsonObject.toString());
@@ -268,15 +271,5 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
         }
     }
 
-    public void getListOfUsersInChat(){
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("purpose", "getListOfUsersInChat");
-            jsonObject.put("id_chat", Chat.instance().getId());
 
-            webSocket.send(jsonObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 }

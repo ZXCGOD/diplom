@@ -169,15 +169,13 @@ public class MessageAdapter extends RecyclerView.Adapter {
                     messageHolder.nameTxt.setText(message.getString("name_user"));
                     messageHolder.messageTxt.setText(message.getString("message"));
                 }
-//                else {
-//
+                else {
+
 //                    ReceivedImageHolder imageHolder = (ReceivedImageHolder) holder;
-//                    imageHolder.nameTxt.setText(message.getString("name"));
-//
-//                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
-//                    imageHolder.imageView.setImageBitmap(bitmap);
-//
-//                }
+//                    imageHolder.nameTxt.setText(message.getString("name_user") + " зашел в чат");
+
+
+                }
 
             }
         } catch (JSONException e) {

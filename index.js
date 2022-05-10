@@ -1,7 +1,8 @@
 const SocketServer = require('websocket').server
 const http = require('http')
 const mysql = require('mysql2');
-
+var ip = require("ip");
+console.dir ( ip.address() );
 var connectionToDB = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -107,7 +108,7 @@ wsServer.on('request', (req) => {
         else if(mydata.purpose == "getListOfMessages"){
 
         connectionToDB.query(
-              'SELECT messages.id,id_chat,id_user,users.name,message FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id;',
+              'SELECT messages.id,id_chat,id_user,users.name,message FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id order by messages.id;',
               function(err, results, fields) {
 
                   results.forEach(function(element,index){

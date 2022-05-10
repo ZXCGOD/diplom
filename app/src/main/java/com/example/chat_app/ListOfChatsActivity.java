@@ -1,5 +1,7 @@
 package com.example.chat_app;
 
+import static com.example.chat_app.Constants.SERVER_PATH;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,7 +26,6 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
 
     private WebSocket webSocket;
-    private String SERVER_PATH = "ws://10.0.2.2:3000";
     private ChatAdapter chatAdapter;
     private ImageView profileImgBtn;
     private ImageView settingsBtn;
@@ -105,7 +106,11 @@ public class ListOfChatsActivity extends AppCompatActivity {
         recyclerView.setAdapter(chatAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        findViewById(R.id.profileImgBtn).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ProfileActivity.class);
 
+            startActivity(intent);
+        });
 
     }
 

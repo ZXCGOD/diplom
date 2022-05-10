@@ -1,5 +1,6 @@
 package com.example.chat_app;
 
+import static com.example.chat_app.Constants.SERVER_PATH;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -22,7 +23,6 @@ import okhttp3.WebSocketListener;
 public class MainActivity extends AppCompatActivity {
 
     private WebSocket webSocket;
-    private String SERVER_PATH = "ws://10.0.2.2:3000";
 
 
     @Override
