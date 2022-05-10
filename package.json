@@ -1,0 +1,28 @@
+{
+  "name": "indus",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZXCGOD/diplom.git"
+  },
+  "author": "Vladislav Peregudov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZXCGOD/diplom/issues"
+  },
+  "homepage": "https://github.com/ZXCGOD/diplom#readme",
+  "dependencies": {
+    "nodemon": "^2.0.16"
+  },
+  "devDependencies": {
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "websocket": "^1.0.34",
+    "websockets": "^0.2.0"
+  }
+}
