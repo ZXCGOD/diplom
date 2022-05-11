@@ -41,6 +41,16 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.close(1000,"norm");
+        initiateSocketConnection();
+
+    }
+
+
+
     private void initiateSocketConnection() {
 
         OkHttpClient client = new OkHttpClient();
@@ -85,6 +95,9 @@ public class ProfileActivity extends AppCompatActivity {
 
         }
 
+
+
+
         private void initializeView() {
 
             EditText editTextEmail = findViewById(R.id.editTextEmail);
@@ -98,36 +111,49 @@ public class ProfileActivity extends AppCompatActivity {
 
             findViewById(R.id.btnEdit).setOnClickListener(v -> {
 
-
-                if(editTextPassword.getText().length() < 1){
-                    Toast.makeText(ProfileActivity.this,
-                            "Пароль пустой",
-                            Toast.LENGTH_SHORT).show();
-                }
                 JSONObject jsonObject = new JSONObject();
-//                try {
-//                    jsonObject.put("purpose", "editProfile");
-//                    jsonObject.put("email", editTextEmail.getText().toString());
-//                    jsonObject.put("name", editTextName.getText().toString());
-//                    jsonObject.put("password", editTextPassword.getText().toString());
-//                    if(editTextPassword.getText().toString().equals(editTextRepeatPassword.getText().toString())) {
-//                        webSocket.send(jsonObject.toString());
-//                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-//
-//                        startActivity(intent);
-//                    } else  {
-//                        Toast.makeText(ProfileActivity.this,
-//                                "Пароли не совпадают",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
 
 
-//
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
 
-            });
+                try {
+                    jsonObject.put("purpose", "editProfile");
+                    jsonObject.put("id", User.instance().getId());
+                    if(editTextPassword.getText().length() >= 9 ){
+                        jsonObject.put("password", editTextPassword.getText().toString());
+                    }   else if(editTextPassword.getText().length()  >=1) {
+                        Toast.makeText(ProfileActivity.this,"Пароль должен содержать более 9 символов", Toast.LENGTH_SHORT).show();
+                    } else {
+                        jsonObject.put("password", User.instance().getPassword());
+                    }
+                    if(editTextEmail.getText().equals(User.instance().getEmail())) {
+                        jsonObject.put("email", User.instance().getEmail());
+                    } else {
+                        jsonObject.put("email", editTextEmail.getText().toString());
+                    }
+                    if(editTextName.equals(User.instance().getName())) {
+                        jsonObject.put("name", User.instance().getName());
+                    }   else {
+                        jsonObject.put("name", editTextName.getText().toString());
+                    }
+                    if(!editTextPassword.getText().toString().equals(editTextRepeatPassword.getText().toString())) {
+                        Toast.makeText(ProfileActivity.this,
+                                "Пароли не совпадают",
+                                Toast.LENGTH_SHORT).show();
+                    }else {
+
+                        webSocket.send(jsonObject.toString());
+                        User.init(User.instance().getId(),jsonObject.getString("name"),jsonObject.getString("email"),"dont forget photo!!!!", jsonObject.getString("password") );
+                        Toast.makeText(ProfileActivity.this," " + User.instance().getName() + " ", Toast.LENGTH_SHORT).show();
+                    }
+
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                }
+
+            );
 
 
 

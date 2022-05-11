@@ -50,6 +50,14 @@ wsServer.on('request', (req) => {
                 
                }
             )
+        }else if(mydata.purpose == "editProfile"){
+
+            connectionToDB.query(
+              'UPDATE users SET name = "' +  mydata.name + '" , email = "'+mydata.email+'" , password = "'+mydata.password+'" , photo = "'+mydata.photo+'" where id = '+mydata.id+' ;',
+              function(err, results, fields) {
+                
+               }
+            )
         }
         else if(mydata.purpose == "authentication")
         {
@@ -59,7 +67,7 @@ wsServer.on('request', (req) => {
                 if(results.length>0){
                     console.log("User присутствует");
 
-                    let row = "{ ok:'true', id: '" + results[0].id + "', name : '" + results[0].name + "', email: '"+ results[0].email +"' , photo: '"+ results[0].photo +"' }";
+                    let row = "{ ok:'true', id: '" + results[0].id + "', name : '" + results[0].name + "', email: '"+ results[0].email +"' , photo: '"+ results[0].photo +"' , password : '"+results[0].password+"' }";
                       console.log(row);
                       connection.sendUTF(
                         row

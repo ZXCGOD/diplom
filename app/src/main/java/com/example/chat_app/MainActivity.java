@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(text);
                     if(jsonObject.getBoolean("ok")){
 
-                        User.init(jsonObject.getString("id"),jsonObject.getString("name"),jsonObject.getString("email"),jsonObject.getString("photo"));
+                        User.init(jsonObject.getString("id"),jsonObject.getString("name"),jsonObject.getString("email"),jsonObject.getString("photo"),jsonObject.getString("password"));
                         Toast.makeText(MainActivity.this,
                                 User.instance().getName(),
                                 Toast.LENGTH_SHORT).show();
@@ -104,6 +104,15 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.close(1000,"norm");
+        initiateSocketConnection();
+    }
+
+
 
     private void initializeView() {
 

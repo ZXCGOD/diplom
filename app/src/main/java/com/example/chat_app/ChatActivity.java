@@ -43,7 +43,6 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     private int IMAGE_REQUEST_ID = 1;
     private MessageAdapter messageAdapter;
     private ArrayList<User> userList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +52,16 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
         initiateSocketConnection();
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.close(1000,"onResume");
+        initiateSocketConnection();
+    }
+
+
+
 
     private void initiateSocketConnection() {
 
@@ -102,7 +111,11 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     private class SocketListener extends WebSocketListener {
 
 
-
+        @Override
+        public void onClosed(WebSocket webSocket, int code, String reason) {
+            super.onClosed(webSocket, code, reason);
+            messageAdapter.clear();
+        }
         @Override
         public void onOpen(WebSocket webSocket, Response response) {
             super.onOpen(webSocket, response);

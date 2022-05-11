@@ -5,12 +5,14 @@ public class User {
     public String name;
     public String email;
     public String photo;
+    public String password;
     private static User user;
-    public  User(String id, String name, String email, String photo){
+    public  User(String id, String name, String email, String photo, String password){
         this.id = id;
         this.name = name;
         this.email = email;
         this.photo = photo;
+        this.password = password;
 
     }
     public User(){
@@ -18,6 +20,15 @@ public class User {
         this.name = "";
         this.email = "";
         this.photo = "";
+        this.password = "";
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public static User instance(){
@@ -26,9 +37,9 @@ public class User {
         }
         return user;
     }
-    public static void init(String id, String name, String email, String photo){
+    public static void init(String id, String name, String email, String photo,String password){
 
-            user = new User(id,name,email,photo);
+            user = new User(id,name,email,photo,password);
 
     }
 

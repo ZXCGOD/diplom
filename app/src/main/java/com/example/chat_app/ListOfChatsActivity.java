@@ -39,8 +39,16 @@ public class ListOfChatsActivity extends AppCompatActivity {
         initiateSocketConnection();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.close(1000,"onResume");
+        initiateSocketConnection();
+    }
 
-    private void initiateSocketConnection() {
+
+
+    public void initiateSocketConnection() {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(SERVER_PATH).build();
@@ -66,9 +74,16 @@ public class ListOfChatsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 webSocket.send(jsonObject.toString());
+
                 initializeView();
             });
 
+        }
+
+        @Override
+        public void onClosed(WebSocket webSocket, int code, String reason) {
+            super.onClosed(webSocket, code, reason);
+            chatAdapter.clear();
         }
 
         @Override
@@ -103,6 +118,7 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
 
         chatAdapter = new ChatAdapter( getLayoutInflater(),this);
+
         recyclerView.setAdapter(chatAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

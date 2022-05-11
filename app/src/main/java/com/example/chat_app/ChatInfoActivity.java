@@ -46,6 +46,15 @@ public class ChatInfoActivity extends AppCompatActivity {
         initiateSocketConnection();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.close(1000,"onResume");
+        initiateSocketConnection();
+    }
+
+
+
     private void initiateSocketConnection() {
 
         OkHttpClient client = new OkHttpClient();
@@ -55,6 +64,13 @@ public class ChatInfoActivity extends AppCompatActivity {
     }
 
     private class SocketListener extends WebSocketListener {
+
+
+        @Override
+        public void onClosed(WebSocket webSocket, int code, String reason) {
+            super.onClosed(webSocket, code, reason);
+            userAdapter.clear();
+        }
 
         @Override
         public void onOpen(WebSocket webSocket, Response response) {

@@ -41,6 +41,19 @@ public class RegistrationActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        webSocket.close(1000,"norm");
+        initiateSocketConnection();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
     private void initiateSocketConnection() {
 
         OkHttpClient client = new OkHttpClient();

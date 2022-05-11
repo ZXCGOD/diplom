@@ -116,6 +116,10 @@ public class ChatAdapter extends RecyclerView.Adapter{
         notifyDataSetChanged();
     }
 
-
+    public void clear() {
+        int size = chats.size();
+        chats.clear();
+        notifyItemRangeRemoved(0, size);
+    }
 
 }

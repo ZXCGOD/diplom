@@ -200,4 +200,10 @@ public class MessageAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
+    public void clear() {
+        int size = messages.size();
+        messages.clear();
+        notifyItemRangeRemoved(0, size);
+    }
+
 }
