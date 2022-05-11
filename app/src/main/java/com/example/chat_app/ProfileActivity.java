@@ -33,7 +33,7 @@ public class ProfileActivity extends AppCompatActivity {
         findViewById(R.id.backToMain)
                 .setOnClickListener(v -> {
 
-                    Intent intent = new Intent(this, MainActivity.class);
+                    Intent intent = new Intent(this, ListOfChatsActivity.class);
                     startActivity(intent);
 
                 });

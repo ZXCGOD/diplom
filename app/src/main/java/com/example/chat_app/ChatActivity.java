@@ -38,7 +38,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     private String name;
     private WebSocket webSocket;
     private EditText messageEdit;
-    private View sendBtn, pickImgBtn, backImgBtn;
+    private View sendBtn, pickImgBtn, backImgBtn, moreImgBtn;
     private RecyclerView recyclerView;
     private int IMAGE_REQUEST_ID = 1;
     private MessageAdapter messageAdapter;
@@ -167,6 +167,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
         pickImgBtn = findViewById(R.id.pickImgBtn);
         backImgBtn = findViewById(R.id.backImgBtn);
         recyclerView = findViewById(R.id.recyclerView);
+        moreImgBtn = findViewById(R.id.moreImgBtn);
 
         messageAdapter = new MessageAdapter(getLayoutInflater());
         recyclerView.setAdapter(messageAdapter);
@@ -179,6 +180,12 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
             startActivity(intent);
          });
+
+        moreImgBtn.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ChatInfoActivity.class);
+
+            startActivity(intent);
+        });
         sendBtn.setOnClickListener(v -> {
 
             JSONObject jsonObject = new JSONObject();

@@ -42,6 +42,14 @@ wsServer.on('request', (req) => {
                 
                }
             )
+        } else if(mydata.purpose == "deleteUserFromChat"){
+
+            connectionToDB.query(
+              'DELETE FROM user_in_chat where id_user = ' +  mydata.id + ' ;',
+              function(err, results, fields) {
+                
+               }
+            )
         }
         else if(mydata.purpose == "authentication")
         {
@@ -73,6 +81,29 @@ wsServer.on('request', (req) => {
                     results.forEach(function(element,index){
                         
                          let row = "{ id: '" + element.id + "', name : '" + element.name + "'}";
+                   
+                    console.log(row);
+
+                    connection.sendUTF(
+                        row
+                    );
+
+                    });
+
+                   
+
+                 
+            }
+               
+            );
+        }else if(mydata.purpose == "getListOfUsersInChat"){
+             connectionToDB.query(
+              'select users.id,users.name,users.email from users,user_in_chat where user_in_chat.id_chat = ' + mydata.id + ' and user_in_chat.id_user = users.id;',
+              function(err, results, fields) {
+                
+                    results.forEach(function(element,index){
+                        
+                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', email : '"+element.email+"'}";
                    
                     console.log(row);
 
