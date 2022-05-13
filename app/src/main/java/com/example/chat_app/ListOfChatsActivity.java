@@ -6,14 +6,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -28,8 +39,13 @@ public class ListOfChatsActivity extends AppCompatActivity {
     private WebSocket webSocket;
     private ChatAdapter chatAdapter;
     private ImageView profileImgBtn;
-    private ImageView settingsBtn;
+    private Spinner spinner;
     private RecyclerView recyclerView;
+    
+    public static void toChatActivity(Context context) {
+        Intent intent = new Intent(context, ChatActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +127,7 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
 
         profileImgBtn = findViewById(R.id.profileImgBtn);
-        settingsBtn = findViewById(R.id.settingsBtn);
+        spinner = findViewById(R.id.spinner);
 
         recyclerView = findViewById(R.id.recyclerViewOfChats);
 
@@ -128,10 +144,69 @@ public class ListOfChatsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+
+
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+                if(adapter.getItemAtPosition(i).toString().equals("Create chat")){
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ListOfChatsActivity.this);
+                    final EditText edittext = new EditText(ListOfChatsActivity.this);
+                    edittext.setHint("Enter email of user");
+                    alert.setTitle("Create chat with user");
+                    alert.setView(edittext);
+                    alert.setPositiveButton("Create chat", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                jsonObject.put("purpose","createChat");
+                                jsonObject.put("email", edittext.getText().toString());
+                                jsonObject.put("id_user",User.instance().getId());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            webSocket.send(jsonObject.toString());
+                            webSocket.close(1000,"onResume");
+                            initiateSocketConnection();
+                        }
+                    });
+                    alert.setCancelable(true);
+                    alert.show();
+                }   else {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(ListOfChatsActivity.this);
+                    final EditText edittext = new EditText(ListOfChatsActivity.this);
+                    edittext.setHint("Enter name of group chat");
+                    alert.setTitle("Create group chat");
+                    alert.setView(edittext);
+                    alert.setPositiveButton("Create group chat", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            JSONObject jsonObject = new JSONObject();
+                            try {
+                                jsonObject.put("purpose","createGroupChat");
+                                jsonObject.put("name", edittext.getText().toString());
+                                jsonObject.put("id_user",User.instance().getId());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            webSocket.send(jsonObject.toString());
+                            webSocket.close(1000,"onResume");
+                            initiateSocketConnection();
+                        }
+                    });
+                    alert.setCancelable(true);
+                    alert.show();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+
     }
 
-    public static void toChatActivity(Context context) {
-        Intent intent = new Intent(context, ChatActivity.class);
-        context.startActivity(intent);
-    }
+
+
 }

@@ -37,7 +37,7 @@ wsServer.on('request', (req) => {
         if(mydata.purpose == "registration"){
 
             connectionToDB.query(
-              'INSERT INTO users VALUES(null,' +  mydata.email + ' , ' +  mydata.name + ' , ' + mydata.password + ', "")',
+              'INSERT INTO users VALUES(null,' +  mydata.email + ' , ' +  mydata.name + ' , ' + mydata.password + ', null)',
               function(err, results, fields) {
                 
                }
@@ -45,7 +45,31 @@ wsServer.on('request', (req) => {
         } else if(mydata.purpose == "deleteUserFromChat"){
 
             connectionToDB.query(
-              'DELETE FROM user_in_chat where id_user = ' +  mydata.id + ' ;',
+              'DELETE FROM user_in_chat where id_user = ' +  mydata.id_user + ' and id_chat = '+mydata.id_chat+' ;',
+              function(err, results, fields) {
+                
+               }
+            )
+        }else if(mydata.purpose == "addUserToChat"){
+
+            connectionToDB.query(
+              'CALL addUserInChat("'+mydata.email+'",'+mydata.id_chat+'  )  ;',
+              function(err, results, fields) {
+                
+               }
+            )
+        }else if(mydata.purpose == "createChat"){
+
+            connectionToDB.query(
+              'CALL createChat("'+mydata.email+'",'+mydata.id_user+'  )  ;',
+              function(err, results, fields) {
+                
+               }
+            )
+        }else if(mydata.purpose == "createGroupChat"){
+
+            connectionToDB.query(
+              'CALL createGroupChat("'+mydata.name+'",'+mydata.id_user+'  )  ;',
               function(err, results, fields) {
                 
                }
@@ -54,6 +78,14 @@ wsServer.on('request', (req) => {
 
             connectionToDB.query(
               'UPDATE users SET name = "' +  mydata.name + '" , email = "'+mydata.email+'" , password = "'+mydata.password+'" , photo = "'+mydata.photo+'" where id = '+mydata.id+' ;',
+              function(err, results, fields) {
+                
+               }
+            )
+        }else if(mydata.purpose == "changeProfileImage"){
+
+            connectionToDB.query(
+              'UPDATE users SET photo = "' +  mydata.image + '"  where id = '+mydata.id+' ;',
               function(err, results, fields) {
                 
                }
@@ -88,7 +120,7 @@ wsServer.on('request', (req) => {
                 
                     results.forEach(function(element,index){
                         
-                         let row = "{ id: '" + element.id + "', name : '" + element.name + "'}";
+                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', type : '" + element.type + "'}";
                    
                     console.log(row);
 
@@ -104,14 +136,37 @@ wsServer.on('request', (req) => {
             }
                
             );
+        }else if(mydata.purpose == "getUserPhoto"){
+             connectionToDB.query(
+              'SELECT photo FROM users WHERE  id = '+mydata.id+';',
+              function(err, results, fields) {
+                
+                  
+                        
+                         let row = "{ image: '" + results[0].photo + "'}";
+                   
+                    
+
+                    connection.sendUTF(
+                        row
+                    );
+
+                    
+
+                   
+
+                 
+            }
+               
+            );
         }else if(mydata.purpose == "getListOfUsersInChat"){
              connectionToDB.query(
-              'select users.id,users.name,users.email from users,user_in_chat where user_in_chat.id_chat = ' + mydata.id + ' and user_in_chat.id_user = users.id;',
+              'select users.id,users.name,users.email,users.photo from users,user_in_chat where user_in_chat.id_chat = ' + mydata.id + ' and user_in_chat.id_user = users.id;',
               function(err, results, fields) {
                 
                     results.forEach(function(element,index){
                         
-                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', email : '"+element.email+"'}";
+                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', email : '"+element.email+"' , image : '"+element.photo+"'}";
                    
                     console.log(row);
 

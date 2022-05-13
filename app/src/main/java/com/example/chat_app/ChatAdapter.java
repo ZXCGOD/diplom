@@ -24,7 +24,7 @@ public class ChatAdapter extends RecyclerView.Adapter{
     private static final int TYPE_MESSAGE_RECEIVED = 1;
     private static final int TYPE_IMAGE_SENT = 2;
     private static final int TYPE_IMAGE_RECEIVED = 3;
-
+    ListOfChatsActivity listOfChatsActivity = new ListOfChatsActivity();
     private LayoutInflater inflater;
     private List<JSONObject> chats = new ArrayList<>();
     private Context parent;
@@ -52,14 +52,20 @@ public class ChatAdapter extends RecyclerView.Adapter{
                     JSONObject chat = chats.get(positionIndex);
                     String id = null;
                     String name = null;
+                    boolean type = false;
                     try {
                         id = chat.getString("id");
                         name = chat.getString("name");
+                        if(chat.getString("type").equals("1")){
+                            type = true;
+                        }else{
+                            type = false;
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
-                    Chat.init(id,name);
+                    Chat.init(id,name,type);
                     Intent intent = new Intent(parent, ChatActivity.class);
 
                     ListOfChatsActivity.toChatActivity(parent);

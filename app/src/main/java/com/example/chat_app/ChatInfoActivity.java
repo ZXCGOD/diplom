@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +18,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -121,12 +123,40 @@ public class ChatInfoActivity extends AppCompatActivity {
         backToChatBtn = findViewById(R.id.backToChatBtn);
 
         recyclerView = findViewById(R.id.recyclerViewOfChats);
+        nameOfChatTxt = findViewById(R.id.nameOfChatTxt);
+        nameOfChatTxt.setText(Chat.instance().getName());
 
-
-
-        userAdapter = new UserAdapter( getLayoutInflater(),ChatInfoActivity.this);
+        userAdapter = new UserAdapter( getLayoutInflater(),ChatInfoActivity.this,webSocket);
         recyclerView.setAdapter(userAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
+        findViewById(R.id.addUserBtn).setOnClickListener(v -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText edittext = new EditText(this);
+            edittext.setHint("Enter email of user");
+            alert.setTitle("Add user");
+
+            alert.setView(edittext);
+
+            alert.setPositiveButton("Add user", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("purpose","addUserToChat");
+                        jsonObject.put("email", edittext.getText().toString());
+                        jsonObject.put("id_chat",Chat.instance().getId());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                  webSocket.send(jsonObject.toString());
+                    webSocket.close(1000,"onResume");
+                    initiateSocketConnection();
+                }
+            });
+            alert.setCancelable(true);
+            alert.show();
+        });
 
         findViewById(R.id.backToChatBtn).setOnClickListener(v -> {
             Intent intent = new Intent(this, ChatActivity.class);
