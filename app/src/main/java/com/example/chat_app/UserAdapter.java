@@ -51,6 +51,7 @@ public class UserAdapter extends RecyclerView.Adapter{
         TextView idTxt;
         TextView emailTxt;
         ImageView personImage;
+        ImageView deleteUser;
 
         public UserHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,7 +60,8 @@ public class UserAdapter extends RecyclerView.Adapter{
             emailTxt = itemView.findViewById(R.id.emailTxt);
             idTxt = itemView.findViewById(R.id.idTxt);
             personImage = itemView.findViewById(R.id.personImage);
-            itemView.setOnClickListener(new View.OnClickListener() {
+            deleteUser = itemView.findViewById(R.id.deleteUser);
+            deleteUser.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int index = getAdapterPosition();
@@ -130,7 +132,9 @@ public class UserAdapter extends RecyclerView.Adapter{
             chatHolder.emailTxt.setText(user.getString("email"));
             chatHolder.nameTxt.setText(user.getString("name"));
             chatHolder.idTxt.setText(user.getString("id"));
-
+            if(User.instance().getId().equals(user.getString("id"))){
+                chatHolder.deleteUser.setVisibility(View.INVISIBLE);
+            }
             byte[] bytes = Base64.decode(user.getString("image"), Base64.DEFAULT);
             Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
             chatHolder.personImage.setImageBitmap(bm);

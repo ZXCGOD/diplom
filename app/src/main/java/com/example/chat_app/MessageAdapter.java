@@ -151,15 +151,14 @@ public class MessageAdapter extends RecyclerView.Adapter {
                     SentMessageHolder messageHolder = (SentMessageHolder) holder;
                     messageHolder.messageTxt.setText(message.getString("message"));
 
+                } else {
+
+                    SentImageHolder imageHolder = (SentImageHolder) holder;
+                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
+
+                    imageHolder.imageView.setImageBitmap(bitmap);
+
                 }
-//                else {
-//
-//                    SentImageHolder imageHolder = (SentImageHolder) holder;
-//                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
-//
-//                    imageHolder.imageView.setImageBitmap(bitmap);
-//
-//                }
 
             } else {
 
@@ -168,12 +167,14 @@ public class MessageAdapter extends RecyclerView.Adapter {
                     ReceivedMessageHolder messageHolder = (ReceivedMessageHolder) holder;
                     messageHolder.nameTxt.setText(message.getString("name_user"));
                     messageHolder.messageTxt.setText(message.getString("message"));
-                }
-                else {
 
-//                    ReceivedImageHolder imageHolder = (ReceivedImageHolder) holder;
-//                    imageHolder.nameTxt.setText(message.getString("name_user") + " зашел в чат");
+                } else {
 
+                    ReceivedImageHolder imageHolder = (ReceivedImageHolder) holder;
+                    imageHolder.nameTxt.setText(message.getString("name_user"));
+
+                    Bitmap bitmap = getBitmapFromString(message.getString("image"));
+                    imageHolder.imageView.setImageBitmap(bitmap);
 
                 }
 
@@ -199,11 +200,11 @@ public class MessageAdapter extends RecyclerView.Adapter {
         messages.add(jsonObject);
         notifyDataSetChanged();
     }
-
     public void clear() {
         int size = messages.size();
         messages.clear();
         notifyItemRangeRemoved(0, size);
     }
-
 }
+
+

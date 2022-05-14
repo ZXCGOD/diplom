@@ -37,7 +37,7 @@ wsServer.on('request', (req) => {
         if(mydata.purpose == "registration"){
 
             connectionToDB.query(
-              'INSERT INTO users VALUES(null,' +  mydata.email + ' , ' +  mydata.name + ' , ' + mydata.password + ', null)',
+              'INSERT INTO users VALUES(null,"' +  mydata.email + '" , "' +  mydata.name + '" , "' + mydata.password + '", default)',
               function(err, results, fields) {
                 
                }
@@ -90,6 +90,22 @@ wsServer.on('request', (req) => {
                 
                }
             )
+        }else if(mydata.purpose == "changeChatImage"){
+
+            connectionToDB.query(
+              'UPDATE chats SET image1 = "' +  mydata.image + '"  where id = '+mydata.id+' ;',
+              function(err, results, fields) {
+                
+               }
+            )
+        }else if(mydata.purpose == "changeNameOfChat"){
+
+            connectionToDB.query(
+              'UPDATE chats SET name = "' +  mydata.name + '"  where id = '+mydata.id+' ;',
+              function(err, results, fields) {
+                
+               }
+            )
         }
         else if(mydata.purpose == "authentication")
         {
@@ -120,7 +136,7 @@ wsServer.on('request', (req) => {
                 
                     results.forEach(function(element,index){
                         
-                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', type : '" + element.type + "'}";
+                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', type : '" + element.type + "', image1 : '" + element.image1 + "', image2 : '" + element.image2 + "', id_creator : '" + element.id_creator + "'}";
                    
                     console.log(row);
 
@@ -168,7 +184,7 @@ wsServer.on('request', (req) => {
                         
                          let row = "{ id: '" + element.id + "', name : '" + element.name + "', email : '"+element.email+"' , image : '"+element.photo+"'}";
                    
-                    console.log(row);
+                    
 
                     connection.sendUTF(
                         row
@@ -185,7 +201,23 @@ wsServer.on('request', (req) => {
         }else if(mydata.purpose == "message"){
 
         connectionToDB.query(
-              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +  mydata.id_user + ' , "' + mydata.message + '")',
+              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +  mydata.id_user + ' , "' + mydata.message + '",null)',
+              function(err, results, fields) {
+                
+               }
+            )
+
+        connections.forEach(element => {
+            if (element != connection){
+                element.sendUTF(mes.utf8Data)
+            }   else {
+               
+            }
+
+        })}else if(mydata.purpose == "messageImage"){
+
+        connectionToDB.query(
+              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +  mydata.id_user + ' , default ,"' + mydata.image + '")',
               function(err, results, fields) {
                 
                }

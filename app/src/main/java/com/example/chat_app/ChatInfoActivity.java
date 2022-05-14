@@ -3,6 +3,10 @@ package com.example.chat_app;
 
 import static com.example.chat_app.Constants.SERVER_PATH;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +19,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -25,6 +32,10 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -36,7 +47,7 @@ public class ChatInfoActivity extends AppCompatActivity {
 
     private WebSocket webSocket;
     private UserAdapter userAdapter;
-    private ImageView backToChatBtn;
+    private ImageView backToChatBtn, chatImage;
     private TextView nameOfChatTxt;
     private ImageView addUserBtn;
     private RecyclerView recyclerView;
@@ -119,17 +130,52 @@ public class ChatInfoActivity extends AppCompatActivity {
     private void initializeView() {
 
 
+        chatImage = findViewById(R.id.chatImage);
         addUserBtn = findViewById(R.id.addUserBtn);
         backToChatBtn = findViewById(R.id.backToChatBtn);
 
         recyclerView = findViewById(R.id.recyclerViewOfChats);
         nameOfChatTxt = findViewById(R.id.nameOfChatTxt);
         nameOfChatTxt.setText(Chat.instance().getName());
+        byte[] bytes = Base64.decode(Chat.instance().getImage(), Base64.DEFAULT);
+        chatImage.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
 
         userAdapter = new UserAdapter( getLayoutInflater(),ChatInfoActivity.this,webSocket);
         recyclerView.setAdapter(userAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        nameOfChatTxt.setOnClickListener(v ->{
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText edittext = new EditText(this);
+            edittext.setHint("Enter new name of group chat");
+            alert.setTitle("Change name");
+
+            alert.setView(edittext);
+
+            alert.setPositiveButton("Change name", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("purpose","changeNameOfChat");
+                        jsonObject.put("name", edittext.getText().toString());
+                        jsonObject.put("id",Chat.instance().getId());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    webSocket.send(jsonObject.toString());
+                    nameOfChatTxt.setText(edittext.getText().toString());
+                }
+            });
+            alert.setCancelable(true);
+            alert.show();
+        });
+
+        chatImage.setOnClickListener(v -> {
+            Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            data.setType("image/*");
+            data = Intent.createChooser(data,"Choose photo for this chat");
+            sActivityResultLauncher.launch(data);
+        });
 
         findViewById(R.id.addUserBtn).setOnClickListener(v -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -168,6 +214,55 @@ public class ChatInfoActivity extends AppCompatActivity {
 
 
 
+    ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
 
+                        Intent data = result.getData();
+                        try {
+                            InputStream is = getContentResolver().openInputStream(data.getData());
+                            Bitmap image = BitmapFactory.decodeStream(is);
+                            chatImage.setImageBitmap(image);
+                            sendImage(image);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+            }
+
+    );
+
+    public void sendImage(Bitmap image) {
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
+
+        String base64String = Base64.encodeToString(outputStream.toByteArray(),
+                Base64.NO_WRAP);
+
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            jsonObject.put("purpose", "changeChatImage");
+            jsonObject.put("id", Chat.instance().getId());
+            jsonObject.put("image", base64String);
+
+            webSocket.send(jsonObject.toString());
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

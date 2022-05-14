@@ -15,6 +15,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -177,9 +181,15 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
                         if (jsonObject.getString("id_chat").equals(Chat.instance().getId())) {
 
+                              if(jsonObject.getString("message").equals("default_expression/ZXCGOD")){
+                                  jsonObject.remove("message");
+                                  messageAdapter.addItem(jsonObject);
+                              }else{
+                                  jsonObject.remove("image");
+                                  messageAdapter.addItem(jsonObject);
+                              }
 
 
-                            messageAdapter.addItem(jsonObject);
 
                         }
                         recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
@@ -221,6 +231,13 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
             startActivity(intent);
          });
 
+        pickImgBtn.setOnClickListener(v ->{
+            Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            data.setType("image/*");
+            data = Intent.createChooser(data,"Choose photo for this chat");
+            sActivityResultLauncher.launch(data);
+        });
+
         moreImgBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, ChatInfoActivity.class);
 
@@ -256,47 +273,55 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
 
-        if (requestCode == IMAGE_REQUEST_ID && resultCode == RESULT_OK) {
+                        Intent data = result.getData();
+                        try {
+                            InputStream is = getContentResolver().openInputStream(data.getData());
+                            Bitmap image = BitmapFactory.decodeStream(is);
 
-            try {
-                InputStream is = getContentResolver().openInputStream(data.getData());
-                Bitmap image = BitmapFactory.decodeStream(is);
+                            sendImage(image);
+                            webSocket.close(1000,"ok");
+                            initiateSocketConnection();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
 
-                sendImage(image);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                    }
+                }
             }
 
-        }
+    );
 
-    }
-
-    private void sendImage(Bitmap image) {
+    public void sendImage(Bitmap image) {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 50, outputStream);
+        image.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
 
         String base64String = Base64.encodeToString(outputStream.toByteArray(),
-                Base64.DEFAULT);
+                Base64.NO_WRAP);
 
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put("name", User.instance().getName());
+            jsonObject.put("purpose", "messageImage");
+            jsonObject.put("name_user", User.instance().getName());
+            jsonObject.put("id_user", User.instance().getId());
+            jsonObject.put("id_chat", Chat.instance().getId());
             jsonObject.put("image", base64String);
 
             webSocket.send(jsonObject.toString());
+            jsonObject.put("isSent",true);
 
-            jsonObject.put("isSent", true);
+
 
             messageAdapter.addItem(jsonObject);
 
-            recyclerView.smoothScrollToPosition(messageAdapter.getItemCount() - 1);
 
         } catch (JSONException e) {
             e.printStackTrace();

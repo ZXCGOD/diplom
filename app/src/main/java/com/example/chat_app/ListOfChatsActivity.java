@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class ListOfChatsActivity extends AppCompatActivity {
     private ImageView profileImgBtn;
     private Spinner spinner;
     private RecyclerView recyclerView;
-    
+
     public static void toChatActivity(Context context) {
         Intent intent = new Intent(context, ChatActivity.class);
         context.startActivity(intent);
@@ -130,6 +131,7 @@ public class ListOfChatsActivity extends AppCompatActivity {
         spinner = findViewById(R.id.spinner);
 
         recyclerView = findViewById(R.id.recyclerViewOfChats);
+
 
 
 
