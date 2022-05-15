@@ -146,8 +146,7 @@ wsServer.on('request', (req) => {
 
                     });
 
-                   
-
+    
                  
             }
                
@@ -234,12 +233,12 @@ wsServer.on('request', (req) => {
         else if(mydata.purpose == "getListOfMessages"){
 
         connectionToDB.query(
-              'SELECT messages.id,id_chat,id_user,users.name,message FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id order by messages.id;',
+              'SELECT messages.id,id_chat,id_user,users.name,message,image FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id order by messages.id;',
               function(err, results, fields) {
 
                   results.forEach(function(element,index){
                         
-                         let row = "{id: '" + element.id + "', id_chat : '" + element.id_chat + "', id_user : '" + element.id_user + "' , name_user : '" + element.name + "', message : '" + element.message + "'}";
+                         let row = "{id: '" + element.id + "', id_chat : '" + element.id_chat + "', id_user : '" + element.id_user + "' , name_user : '" + element.name + "', message : '" + element.message + "', image : '" + element.image + "'}";
                    
                     console.log(row);
 

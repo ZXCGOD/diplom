@@ -34,6 +34,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 .setOnClickListener(v -> {
 
                     Intent intent = new Intent(this, MainActivity.class);
+                    webSocket.close(1000,"");
                     startActivity(intent);
 
                 });
@@ -47,11 +48,15 @@ public class RegistrationActivity extends AppCompatActivity {
         webSocket.close(1000,"norm");
         initiateSocketConnection();
     }
-
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
+        if (false) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(this, MainActivity.class);
+            webSocket.close(1000,"");
+            startActivity(intent);
+        }
     }
 
     private void initiateSocketConnection() {
@@ -118,7 +123,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     if(editTextPassword.getText().toString().equals(editTextRepeatPassword.getText().toString())) {
                         webSocket.send(jsonObject.toString());
                         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
-
+                        webSocket.close(1000,"");
                         startActivity(intent);
                     } else  {
                         Toast.makeText(RegistrationActivity.this,

@@ -66,6 +66,16 @@ public class ChatInfoActivity extends AppCompatActivity {
         initiateSocketConnection();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (false) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(this, ChatActivity.class);
+            webSocket.close(1000,"");
+            startActivity(intent);
+        }
+    }
 
 
     private void initiateSocketConnection() {
@@ -164,6 +174,7 @@ public class ChatInfoActivity extends AppCompatActivity {
                     }
                     webSocket.send(jsonObject.toString());
                     nameOfChatTxt.setText(edittext.getText().toString());
+                    Chat.instance().setName(edittext.getText().toString());
                 }
             });
             alert.setCancelable(true);
@@ -175,6 +186,7 @@ public class ChatInfoActivity extends AppCompatActivity {
             data.setType("image/*");
             data = Intent.createChooser(data,"Choose photo for this chat");
             sActivityResultLauncher.launch(data);
+
         });
 
         findViewById(R.id.addUserBtn).setOnClickListener(v -> {
@@ -206,7 +218,7 @@ public class ChatInfoActivity extends AppCompatActivity {
 
         findViewById(R.id.backToChatBtn).setOnClickListener(v -> {
             Intent intent = new Intent(this, ChatActivity.class);
-
+            webSocket.close(1000,"");
             startActivity(intent);
         });
 
@@ -225,9 +237,12 @@ public class ChatInfoActivity extends AppCompatActivity {
                         try {
                             InputStream is = getContentResolver().openInputStream(data.getData());
                             Bitmap image = BitmapFactory.decodeStream(is);
-                            chatImage.setImageBitmap(image);
-                            sendImage(image);
 
+
+                            sendImage(image);
+                            Intent intent = new Intent(ChatInfoActivity.this, ChatInfoActivity.class);
+
+                            startActivity(intent);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -241,11 +256,12 @@ public class ChatInfoActivity extends AppCompatActivity {
     public void sendImage(Bitmap image) {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
+        image.compress(Bitmap.CompressFormat.JPEG, 1, outputStream);
 
         String base64String = Base64.encodeToString(outputStream.toByteArray(),
                 Base64.NO_WRAP);
 
+        Chat.instance().setImage(base64String);
         JSONObject jsonObject = new JSONObject();
 
         try {

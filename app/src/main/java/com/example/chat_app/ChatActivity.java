@@ -71,6 +71,8 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
             super.onBackPressed();
         } else {
             Intent intent = new Intent(this, ListOfChatsActivity.class);
+            webSocket.close(1000,"");
+            Chat.init("","",false,"");
             startActivity(intent);
         }
     }
@@ -227,7 +229,8 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
         backImgBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, ListOfChatsActivity.class);
-
+            webSocket.close(1000,"");
+            Chat.init("","",false,"");
             startActivity(intent);
          });
 
@@ -240,7 +243,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
         moreImgBtn.setOnClickListener(v -> {
             Intent intent = new Intent(this, ChatInfoActivity.class);
-
+            webSocket.close(1000,"");
             startActivity(intent);
         });
         sendBtn.setOnClickListener(v -> {
@@ -301,7 +304,8 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     public void sendImage(Bitmap image) {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
+        image.getByteCount();
+        image.compress(Bitmap.CompressFormat.JPEG, 1, outputStream);
 
         String base64String = Base64.encodeToString(outputStream.toByteArray(),
                 Base64.NO_WRAP);
@@ -317,7 +321,6 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
             webSocket.send(jsonObject.toString());
             jsonObject.put("isSent",true);
-
 
 
             messageAdapter.addItem(jsonObject);

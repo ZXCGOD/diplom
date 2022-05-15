@@ -50,11 +50,23 @@ public class ProfileActivity extends AppCompatActivity {
                 .setOnClickListener(v -> {
 
                     Intent intent = new Intent(this, ListOfChatsActivity.class);
+                    webSocket.close(1000,"");
                     startActivity(intent);
 
                 });
         initiateSocketConnection();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (false) {
+            super.onBackPressed();
+        } else {
+            Intent intent = new Intent(this, ListOfChatsActivity.class);
+            webSocket.close(1000,"");
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -64,6 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         initiateSocketConnection();
 
     }
+
 
 
 
@@ -201,7 +214,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void sendImage(Bitmap image) {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        image.compress(Bitmap.CompressFormat.JPEG, 20, outputStream);
+        image.compress(Bitmap.CompressFormat.JPEG, 1, outputStream);
 
         String base64String = Base64.encodeToString(outputStream.toByteArray(),
                 Base64.NO_WRAP);

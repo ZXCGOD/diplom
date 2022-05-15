@@ -63,7 +63,12 @@ public class ListOfChatsActivity extends AppCompatActivity {
         initiateSocketConnection();
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(false) {
+            super.onBackPressed();
+        }
+    }
 
     public void initiateSocketConnection() {
 
@@ -112,8 +117,9 @@ public class ListOfChatsActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(text);
 
-                    chatAdapter.addItem(jsonObject);
-
+                    if(jsonObject.has("id_creator")) {
+                        chatAdapter.addItem(jsonObject);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -129,7 +135,7 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
         profileImgBtn = findViewById(R.id.profileImgBtn);
         spinner = findViewById(R.id.spinner);
-
+        spinner.setSelection(0, false);
         recyclerView = findViewById(R.id.recyclerViewOfChats);
 
 
@@ -153,7 +159,9 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
+
                 if(adapter.getItemAtPosition(i).toString().equals("Create chat")){
+
                     AlertDialog.Builder alert = new AlertDialog.Builder(ListOfChatsActivity.this);
                     final EditText edittext = new EditText(ListOfChatsActivity.this);
                     edittext.setHint("Enter email of user");
@@ -200,6 +208,7 @@ public class ListOfChatsActivity extends AppCompatActivity {
                     alert.setCancelable(true);
                     alert.show();
                 }
+
             }
 
             @Override

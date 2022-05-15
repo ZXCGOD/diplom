@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
 
                         Intent intent = new Intent(MainActivity.this, ListOfChatsActivity.class);
-
+                        webSocket.close(1000,"");
                         startActivity(intent);
                     }   else    {
                         Toast.makeText(MainActivity.this,
