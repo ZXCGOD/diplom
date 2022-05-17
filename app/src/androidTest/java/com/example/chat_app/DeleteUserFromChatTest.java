@@ -1,25 +1,26 @@
 package com.example.chat_app;
 
+import static com.example.chat_app.Constants.SERVER_PATH;
 
-
-import org.json.*;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.WebSocket;
-
 import okhttp3.WebSocketListener;
 
 
-public class ExampleUnitTest {
+
+
+
+public class DeleteUserFromChatTest {
     private WebSocket webSocket;
-    String SERVER_PATH = "ws://192.168.1.4:3000";
+
 
     @Before
     public void before(){
@@ -29,13 +30,13 @@ public class ExampleUnitTest {
 
     }
     @Test
-    public void authentication() {
+    public void deleteUserFromChat() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("purpose", "authentication");
-            jsonObject.put("email", "123");
-            jsonObject.put("password", "123");
-             } catch (JSONException e) {
+            jsonObject.put("purpose","deleteUserFromChat");
+            jsonObject.put("id_chat","1");
+            jsonObject.put("id_user","1");
+        } catch (JSONException e) {
             e.printStackTrace();
         }
         webSocket.send(jsonObject.toString());
@@ -48,18 +49,13 @@ public class ExampleUnitTest {
 
     private class SocketListener extends WebSocketListener {
 
-        @Override
-        public void onOpen(WebSocket webSocket, Response response) {
-            super.onOpen(webSocket, response);
 
-
-
-        }
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
 
-            boolean answerOfServer = false;
+
+            boolean answerOfServer = true;
             try {
                 JSONObject jsonObject = new JSONObject(text);
                 answerOfServer = jsonObject.getBoolean("ok");

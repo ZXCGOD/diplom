@@ -39,15 +39,32 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'INSERT INTO users VALUES(null,"' +  mydata.email + '" , "' +  mydata.name + '" , "' + mydata.password + '", default)',
               function(err, results, fields) {
-                
+                if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
                }
+            }
+
             )
         } else if(mydata.purpose == "deleteUserFromChat"){
 
             connectionToDB.query(
               'DELETE FROM user_in_chat where id_user = ' +  mydata.id_user + ' and id_chat = '+mydata.id_chat+' ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "addUserToChat"){
@@ -55,7 +72,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'CALL addUserInChat("'+mydata.email+'",'+mydata.id_chat+'  )  ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "createChat"){
@@ -63,7 +88,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'CALL createChat("'+mydata.email+'",'+mydata.id_user+'  )  ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "createGroupChat"){
@@ -71,7 +104,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'CALL createGroupChat("'+mydata.name+'",'+mydata.id_user+'  )  ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "editProfile"){
@@ -79,7 +120,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'UPDATE users SET name = "' +  mydata.name + '" , email = "'+mydata.email+'" , password = "'+mydata.password+'" , photo = "'+mydata.photo+'" where id = '+mydata.id+' ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "changeProfileImage"){
@@ -87,7 +136,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'UPDATE users SET photo = "' +  mydata.image + '"  where id = '+mydata.id+' ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "changeChatImage"){
@@ -95,7 +152,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'UPDATE chats SET image1 = "' +  mydata.image + '"  where id = '+mydata.id+' ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }else if(mydata.purpose == "changeNameOfChat"){
@@ -103,7 +168,15 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'UPDATE chats SET name = "' +  mydata.name + '"  where id = '+mydata.id+' ;',
               function(err, results, fields) {
-                
+                  if(err.length=0){
+                connection.sendUTF(
+                        "{ ok:'true'}"
+                        );
+            }else{
+                 connection.sendUTF(
+                        "{ ok:'false'}"
+                        );
+               }
                }
             )
         }
