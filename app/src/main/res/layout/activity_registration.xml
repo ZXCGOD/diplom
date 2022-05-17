@@ -7,12 +7,20 @@
     tools:context=".MainActivity">
 
 
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        app:srcCompat="@drawable/logo"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="Enter your email"
         android:textSize="16sp"
+        android:layout_above="@id/editTextName"
         android:inputType="textEmailAddress"
         android:id="@+id/editTextEmail"
         android:background="@drawable/edittext_design"
@@ -24,29 +32,33 @@
         android:layout_margin="16dp"
         android:hint="Enter your name"
         android:textSize="16sp"
-        android:layout_below="@id/editTextEmail"
+        android:layout_above="@id/editTextPassword"
         android:id="@+id/editTextName"
         android:inputType="textCapWords"
         android:background="@drawable/edittext_design"
         android:padding="10dp"/>
 
     <EditText
+        android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="Enter your password"
-        android:layout_below="@id/editTextName"
-        android:textSize="16sp"
-        android:id="@+id/editTextPassword"
-        android:inputType="textPassword"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/edittext_design"
-        android:padding="10dp"/>
+        android:hint="Enter your password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textSize="16sp" />
     <EditText
+        android:layout_below="@id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="Repeat your password"
-        android:layout_below="@id/editTextPassword"
         android:textSize="16sp"
         android:inputType="textPassword"
         android:id="@+id/editTextRepeatPassword"

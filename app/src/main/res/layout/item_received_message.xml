@@ -15,6 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/nameTxt"
+
         android:background="@color/design_default_color_primary"
         android:textColor="#ffffff"
         android:padding="8dp"

@@ -7,12 +7,22 @@
     tools:context=".MainActivity">
 
 
+    <ImageView
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        app:srcCompat="@drawable/logo" />
+
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
         android:hint="Enter your email"
         android:textSize="16sp"
+
+        android:layout_above="@id/editTextPassword"
         android:id="@+id/editTextEmail"
         android:background="@drawable/edittext_design"
         android:padding="10dp"/>
@@ -21,7 +31,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextEmail"
+        android:layout_above="@id/enterBtn"
         android:layout_margin="16dp"
         android:hint="Enter your password"
         android:textSize="16sp"
@@ -32,9 +42,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/editTextPassword"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_centerVertical="true"
         android:text="Enter"
         android:textColor="#ffffff"
         android:background="@color/design_default_color_primary_dark"
