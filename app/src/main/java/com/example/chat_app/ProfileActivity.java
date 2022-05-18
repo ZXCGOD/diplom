@@ -221,19 +221,20 @@ public class ProfileActivity extends AppCompatActivity {
 
         JSONObject jsonObject = new JSONObject();
 
-        try {
-            jsonObject.put("purpose", "changeProfileImage");
-            jsonObject.put("id", User.instance().getId());
-            jsonObject.put("image", base64String);
+        if(base64String.equals("undefined")){
 
-            webSocket.send(jsonObject.toString());
+        }else {
+            try {
+                jsonObject.put("purpose", "changeProfileImage");
+                jsonObject.put("id", User.instance().getId());
+                jsonObject.put("image", base64String);
+
+                webSocket.send(jsonObject.toString());
 
 
-
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
     }
