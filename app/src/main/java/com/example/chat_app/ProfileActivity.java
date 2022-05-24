@@ -1,5 +1,6 @@
 package com.example.chat_app;
 
+import static com.example.chat_app.Constants.APP_PREFERENCES;
 import static com.example.chat_app.Constants.SERVER_PATH;
 
 import androidx.activity.result.ActivityResult;
@@ -10,7 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -38,7 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
     private EditText editTextName;
     private EditText editTextPassword;
     private EditText editTextRepeatPassword;
-    private ImageView profileImg;
+    private ImageView profileImg,logout;
+    private SharedPreferences mSettings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,14 +149,22 @@ public class ProfileActivity extends AppCompatActivity {
             profileImg = findViewById(R.id.profileImg);
             editTextEmail.setText(User.instance().getEmail());
             editTextName.setText(User.instance().getName());
-
-
+            logout = findViewById(R.id.logout);
+            mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = mSettings.edit();
 
             profileImg.setOnClickListener(v ->{
                 Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 data.setType("image/*");
                 data = Intent.createChooser(data,"Choose photo for your profile");
                 sActivityResultLauncher.launch(data);
+            });
+
+            logout.setOnClickListener(v ->{
+                editor.clear().commit();
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                webSocket.close(1000,"");
+                startActivity(intent);
             });
 
             findViewById(R.id.btnEdit).setOnClickListener(v -> {

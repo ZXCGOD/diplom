@@ -14,7 +14,15 @@
         android:layout_centerHorizontal="true"
         android:padding="8dp"
         android:scaleType="centerCrop"
-
+        />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="6dp"
+        android:id="@+id/logout"
+        android:src="@drawable/ic_baseline_exit_to_app_24"
         />
     <EditText
         android:layout_width="match_parent"

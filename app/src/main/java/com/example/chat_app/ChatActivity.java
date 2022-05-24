@@ -312,24 +312,28 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
 
         JSONObject jsonObject = new JSONObject();
 
-        try {
-            jsonObject.put("purpose", "messageImage");
-            jsonObject.put("name_user", User.instance().getName());
-            jsonObject.put("id_user", User.instance().getId());
-            jsonObject.put("id_chat", Chat.instance().getId());
-            jsonObject.put("image", base64String);
+        if(base64String.equals("undefined")){
 
-            webSocket.send(jsonObject.toString());
-            jsonObject.put("isSent",true);
+        }else {
+
+            try {
+                jsonObject.put("purpose", "messageImage");
+                jsonObject.put("name_user", User.instance().getName());
+                jsonObject.put("id_user", User.instance().getId());
+                jsonObject.put("id_chat", Chat.instance().getId());
+                jsonObject.put("image", base64String);
+
+                webSocket.send(jsonObject.toString());
+                jsonObject.put("isSent", true);
 
 
-            messageAdapter.addItem(jsonObject);
+                messageAdapter.addItem(jsonObject);
 
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     public void getListOfMessages(){

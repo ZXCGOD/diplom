@@ -1,11 +1,19 @@
 package com.example.chat_app;
 
+import static com.example.chat_app.Constants.APP_PREFERENCES;
+import static com.example.chat_app.Constants.APP_PREFERENCES_EMAIL;
+import static com.example.chat_app.Constants.APP_PREFERENCES_ID;
+import static com.example.chat_app.Constants.APP_PREFERENCES_NAME;
+import static com.example.chat_app.Constants.APP_PREFERENCES_PASSWORD;
+import static com.example.chat_app.Constants.APP_PREFERENCES_PHOTO;
 import static com.example.chat_app.Constants.SERVER_PATH;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.EditText;
@@ -23,14 +31,21 @@ import okhttp3.WebSocketListener;
 public class MainActivity extends AppCompatActivity {
 
     private WebSocket webSocket;
+    private SharedPreferences mSettings;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        if(mSettings.contains(APP_PREFERENCES_ID)){
+            User.init((mSettings.getString(APP_PREFERENCES_ID, "")),(mSettings.getString(APP_PREFERENCES_NAME, "")),(mSettings.getString(APP_PREFERENCES_EMAIL, "")),(mSettings.getString(APP_PREFERENCES_PHOTO, "")),(mSettings.getString(APP_PREFERENCES_PASSWORD, "")));
+            Intent intent = new Intent(this, ListOfChatsActivity.class);
+            startActivity(intent);
+        }
         initiateSocketConnection();
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 10);
@@ -81,9 +96,14 @@ public class MainActivity extends AppCompatActivity {
                     if(jsonObject.getBoolean("ok")){
 
                         User.init(jsonObject.getString("id"),jsonObject.getString("name"),jsonObject.getString("email"),jsonObject.getString("photo"),jsonObject.getString("password"));
-                        Toast.makeText(MainActivity.this,
-                                User.instance().getName(),
-                                Toast.LENGTH_SHORT).show();
+
+                        SharedPreferences.Editor editor = mSettings.edit();
+                        editor.putString(APP_PREFERENCES_ID, jsonObject.getString("id"));
+                        editor.putString(APP_PREFERENCES_EMAIL, jsonObject.getString("email"));
+                        editor.putString(APP_PREFERENCES_PHOTO, jsonObject.getString("photo"));
+                        editor.putString(APP_PREFERENCES_NAME, jsonObject.getString("name"));
+                        editor.putString(APP_PREFERENCES_PASSWORD, jsonObject.getString("password"));
+                        editor.apply();
 
                         Intent intent = new Intent(MainActivity.this, ListOfChatsActivity.class);
                         webSocket.close(1000,"");
