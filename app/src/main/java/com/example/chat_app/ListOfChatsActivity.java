@@ -52,7 +52,6 @@ public class ListOfChatsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_chats);
-
         initiateSocketConnection();
     }
 
@@ -85,9 +84,6 @@ public class ListOfChatsActivity extends AppCompatActivity {
             super.onOpen(webSocket, response);
 
             runOnUiThread(() -> {
-                Toast.makeText(ListOfChatsActivity.this,
-                        "Socket Connection Successful!",
-                        Toast.LENGTH_SHORT).show();
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("purpose", "getListOfChats");
@@ -116,11 +112,9 @@ public class ListOfChatsActivity extends AppCompatActivity {
 
                 try {
                     JSONObject jsonObject = new JSONObject(text);
-
                     if(jsonObject.has("id_creator")) {
                         chatAdapter.addItem(jsonObject);
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -131,18 +125,12 @@ public class ListOfChatsActivity extends AppCompatActivity {
     }
 
     private void initializeView() {
-
-
         profileImgBtn = findViewById(R.id.profileImgBtn);
         spinner = findViewById(R.id.spinner);
         spinner.setSelection(0, false);
+
         recyclerView = findViewById(R.id.recyclerViewOfChats);
-
-
-
-
         chatAdapter = new ChatAdapter( getLayoutInflater(),this);
-
         recyclerView.setAdapter(chatAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -160,14 +148,14 @@ public class ListOfChatsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView adapter, View v, int i, long lng) {
 
-                if(adapter.getItemAtPosition(i).toString().equals("Create chat")){
+                if(adapter.getItemAtPosition(i).toString().equals("Создать чат")){
 
                     AlertDialog.Builder alert = new AlertDialog.Builder(ListOfChatsActivity.this);
                     final EditText edittext = new EditText(ListOfChatsActivity.this);
-                    edittext.setHint("Enter email of user");
-                    alert.setTitle("Create chat with user");
+                    edittext.setHint("Введите email пользователя");
+                    alert.setTitle("Создание чата с пользователем");
                     alert.setView(edittext);
-                    alert.setPositiveButton("Create chat", new DialogInterface.OnClickListener() {
+                    alert.setPositiveButton("Создать чат", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             JSONObject jsonObject = new JSONObject();
                             try {
@@ -187,10 +175,10 @@ public class ListOfChatsActivity extends AppCompatActivity {
                 }   else {
                     AlertDialog.Builder alert = new AlertDialog.Builder(ListOfChatsActivity.this);
                     final EditText edittext = new EditText(ListOfChatsActivity.this);
-                    edittext.setHint("Enter name of group chat");
-                    alert.setTitle("Create group chat");
+                    edittext.setHint("Введите название новой беседы");
+                    alert.setTitle("Создание беседы");
                     alert.setView(edittext);
-                    alert.setPositiveButton("Create group chat", new DialogInterface.OnClickListener() {
+                    alert.setPositiveButton("Создать беседу", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             JSONObject jsonObject = new JSONObject();
                             try {

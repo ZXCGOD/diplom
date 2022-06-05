@@ -55,7 +55,6 @@ public class ChatInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_info);
-
         initiateSocketConnection();
     }
 
@@ -100,9 +99,6 @@ public class ChatInfoActivity extends AppCompatActivity {
             super.onOpen(webSocket, response);
 
             runOnUiThread(() -> {
-                Toast.makeText(ChatInfoActivity.this,
-                        "Socket Connection Successful!",
-                        Toast.LENGTH_SHORT).show();
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("purpose", "getListOfUsersInChat");
@@ -123,11 +119,10 @@ public class ChatInfoActivity extends AppCompatActivity {
             runOnUiThread(() -> {
 
                 try {
+
                     JSONObject jsonObject = new JSONObject(text);
-
-                    userAdapter.addItem(jsonObject);
-
-
+                    if(jsonObject.has("email")){
+                    userAdapter.addItem(jsonObject);}
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -157,12 +152,12 @@ public class ChatInfoActivity extends AppCompatActivity {
         nameOfChatTxt.setOnClickListener(v ->{
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             final EditText edittext = new EditText(this);
-            edittext.setHint("Enter new name of group chat");
-            alert.setTitle("Change name");
+            edittext.setHint("Введите новое имя беседы");
+            alert.setTitle("Изменение имени");
 
             alert.setView(edittext);
 
-            alert.setPositiveButton("Change name", new DialogInterface.OnClickListener() {
+            alert.setPositiveButton("Изменить имя", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     JSONObject jsonObject = new JSONObject();
                     try {
@@ -184,7 +179,7 @@ public class ChatInfoActivity extends AppCompatActivity {
         chatImage.setOnClickListener(v -> {
             Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             data.setType("image/*");
-            data = Intent.createChooser(data,"Choose photo for this chat");
+            data = Intent.createChooser(data,"Выберите фото для беседы");
             sActivityResultLauncher.launch(data);
 
         });
@@ -192,12 +187,12 @@ public class ChatInfoActivity extends AppCompatActivity {
         findViewById(R.id.addUserBtn).setOnClickListener(v -> {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             final EditText edittext = new EditText(this);
-            edittext.setHint("Enter email of user");
-            alert.setTitle("Add user");
+            edittext.setHint("Введите email пользователя");
+            alert.setTitle("Добавление пользователя");
 
             alert.setView(edittext);
 
-            alert.setPositiveButton("Add user", new DialogInterface.OnClickListener() {
+            alert.setPositiveButton("Добавить пользователя", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int whichButton) {
                     JSONObject jsonObject = new JSONObject();
                     try {

@@ -27,19 +27,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
-
-
-
-        findViewById(R.id.backToMain)
-                .setOnClickListener(v -> {
-
-                    Intent intent = new Intent(this, MainActivity.class);
-                    webSocket.close(1000,"");
-                    startActivity(intent);
-
-                });
         initiateSocketConnection();
-
     }
 
     @Override
@@ -74,10 +62,6 @@ public class RegistrationActivity extends AppCompatActivity {
             super.onOpen(webSocket, response);
 
             runOnUiThread(() -> {
-                Toast.makeText(RegistrationActivity.this,
-                        "Socket Connection Successful!",
-                        Toast.LENGTH_SHORT).show();
-
                 initializeView();
             });
 
@@ -86,20 +70,6 @@ public class RegistrationActivity extends AppCompatActivity {
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
-
-            runOnUiThread(() -> {
-
-                try {
-                    JSONObject jsonObject = new JSONObject(text);
-                    jsonObject.put("isSent", false);
-
-
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            });
 
         }
 
@@ -110,7 +80,14 @@ public class RegistrationActivity extends AppCompatActivity {
             EditText editTextPassword = findViewById(R.id.editTextPassword);
             EditText editTextRepeatPassword = findViewById(R.id.editTextRepeatPassword);
 
+            findViewById(R.id.backToMain)
+                    .setOnClickListener(v -> {
 
+                        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                        webSocket.close(1000,"");
+                        startActivity(intent);
+
+                    });
 
             findViewById(R.id.btnRegister).setOnClickListener(v -> {
 
@@ -130,13 +107,9 @@ public class RegistrationActivity extends AppCompatActivity {
                                 "Пароли не совпадают",
                                 Toast.LENGTH_SHORT).show();
                     }
-
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             });
 
 

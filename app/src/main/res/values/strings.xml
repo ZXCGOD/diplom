@@ -2,7 +2,7 @@
     <string name="app_name">Chat-App</string>
 
     <string-array name="chats">
-        <item>Create chat</item>
-        <item>Create group chat</item>
+        <item>Создать чат</item>
+        <item>Создать беседу</item>
     </string-array>
 </resources>

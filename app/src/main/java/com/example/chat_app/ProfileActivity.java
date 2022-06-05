@@ -47,19 +47,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
-
-        findViewById(R.id.backToMain)
-                .setOnClickListener(v -> {
-
-                    Intent intent = new Intent(this, ListOfChatsActivity.class);
-                    webSocket.close(1000,"");
-                    startActivity(intent);
-
-                });
         initiateSocketConnection();
-
     }
 
     @Override
@@ -100,10 +88,6 @@ public class ProfileActivity extends AppCompatActivity {
 
             runOnUiThread(() -> {
                 getUserPhoto();
-                Toast.makeText(ProfileActivity.this,
-                        "Socket Connection Successful!",
-                        Toast.LENGTH_SHORT).show();
-
                 initializeView();
             });
 
@@ -117,17 +101,10 @@ public class ProfileActivity extends AppCompatActivity {
 
                 try {
 
-
                     JSONObject jsonObject = new JSONObject(text);
-
-
-
-                        byte[] bytes = Base64.decode(jsonObject.getString("image"), Base64.DEFAULT);
-                        Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        profileImg.setImageBitmap(bm);
-
-
-
+                    byte[] bytes = Base64.decode(jsonObject.getString("image"), Base64.DEFAULT);
+                    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    profileImg.setImageBitmap(bm);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -153,10 +130,22 @@ public class ProfileActivity extends AppCompatActivity {
             mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = mSettings.edit();
 
+
+
+
+
+            findViewById(R.id.backToMain)
+                    .setOnClickListener(v -> {
+                        Intent intent = new Intent(ProfileActivity.this,
+                                ListOfChatsActivity.class);
+                        webSocket.close(1000,"");
+                        startActivity(intent);
+                    });
+
             profileImg.setOnClickListener(v ->{
                 Intent data = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 data.setType("image/*");
-                data = Intent.createChooser(data,"Choose photo for your profile");
+                data = Intent.createChooser(data,"Выберите новую фотографию профиля");
                 sActivityResultLauncher.launch(data);
             });
 
@@ -171,15 +160,14 @@ public class ProfileActivity extends AppCompatActivity {
 
                 JSONObject jsonObject = new JSONObject();
 
-
-
                 try {
                     jsonObject.put("purpose", "editProfile");
                     jsonObject.put("id", User.instance().getId());
                     if(editTextPassword.getText().length() >= 9 ){
                         jsonObject.put("password", editTextPassword.getText().toString());
                     }   else if(editTextPassword.getText().length()  >=1) {
-                        Toast.makeText(ProfileActivity.this,"Пароль должен содержать более 9 символов", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this,"Пароль должен содержать более 9 символов",
+                                Toast.LENGTH_SHORT).show();
                     } else {
                         jsonObject.put("password", User.instance().getPassword());
                     }
@@ -199,8 +187,12 @@ public class ProfileActivity extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                     }else {
                         webSocket.send(jsonObject.toString());
-                        User.init(User.instance().getId(),jsonObject.getString("name"),jsonObject.getString("email"),"dont forget photo!!!!", jsonObject.getString("password") );
-                        Toast.makeText(ProfileActivity.this," " + User.instance().getName() + " ", Toast.LENGTH_SHORT).show();
+                        User.instance().setName(jsonObject.getString("name"));
+                        User.instance().setEmail(jsonObject.getString("email"));
+
+                                User.instance().setPassword(jsonObject.getString("password") );
+                        Toast.makeText(ProfileActivity.this," " + User.instance().getName() + " ",
+                                Toast.LENGTH_SHORT).show();
                     }
 
 
@@ -232,37 +224,27 @@ public class ProfileActivity extends AppCompatActivity {
                 Base64.NO_WRAP);
 
         JSONObject jsonObject = new JSONObject();
-
         if(base64String.equals("undefined")){
-
         }else {
             try {
                 jsonObject.put("purpose", "changeProfileImage");
                 jsonObject.put("id", User.instance().getId());
                 jsonObject.put("image", base64String);
-
                 webSocket.send(jsonObject.toString());
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     private void getUserPhoto() {
         JSONObject jsonObject = new JSONObject();
-
-
-
         try {
             jsonObject.put("purpose", "getUserPhoto");
             jsonObject.put("id", User.instance().getId());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         webSocket.send(jsonObject.toString());
     }
 
@@ -279,7 +261,6 @@ public class ProfileActivity extends AppCompatActivity {
                             Bitmap image = BitmapFactory.decodeStream(is);
                             profileImg.setImageBitmap(image);
                             sendImage(image);
-
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }

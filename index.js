@@ -46,7 +46,8 @@ wsServer.on('request', (req) => {
         } else if(mydata.purpose == "deleteUserFromChat"){
 
             connectionToDB.query(
-              'DELETE FROM user_in_chat where id_user = ' +  mydata.id_user + ' and id_chat = '+mydata.id_chat+' ;',
+              'DELETE FROM user_in_chat where id_user = ' +
+              mydata.id_user + ' and id_chat = '+mydata.id_chat+' ;',
               function(err, results, fields) {
                   
                }
@@ -64,7 +65,7 @@ wsServer.on('request', (req) => {
             connectionToDB.query(
               'CALL createChat("'+mydata.email+'",'+mydata.id_user+'  )  ;',
               function(err, results, fields) {
-            
+
                }
             )
         }else if(mydata.purpose == "createGroupChat"){
@@ -78,7 +79,7 @@ wsServer.on('request', (req) => {
         }else if(mydata.purpose == "editProfile"){
 
             connectionToDB.query(
-              'UPDATE users SET name = "' +  mydata.name + '" , email = "'+mydata.email+'" , password = "'+mydata.password+'" , photo = "'+mydata.photo+'" where id = '+mydata.id+' ;',
+              'UPDATE users SET name = "' +  mydata.name + '" ,email = "'+mydata.email+'" , password = "'+mydata.password+'"  where id = '+mydata.id+' ;',
               function(err, results, fields) {
                 
                }
@@ -86,7 +87,7 @@ wsServer.on('request', (req) => {
         }else if(mydata.purpose == "changeProfileImage"){
 
             connectionToDB.query(
-              'UPDATE users SET photo = "' +  mydata.image + '"  where id = '+mydata.id+' ;',
+              'UPDATE users SET photo = "' +  mydata.image + '" where id = '+mydata.id+' ;',
               function(err, results, fields) {
                   
                }
@@ -116,7 +117,7 @@ wsServer.on('request', (req) => {
                 if(results.length>0){
                     console.log("User присутствует");
 
-                    let row = "{ ok:'true', id: '" + results[0].id + "', name : '" + results[0].name + "', email: '"+ results[0].email +"' , photo: '"+ results[0].photo +"' , password : '"+results[0].password+"' }";
+                    let row = "{ ok:'true', id: '" + results[0].id + "',name : '" + results[0].name + "', email: '"+ results[0].email +"' ,photo: '"+ results[0].photo +"' , password : '"+results[0].password+"' }";
                       console.log(row);
                       connection.sendUTF(
                         row
@@ -137,7 +138,7 @@ wsServer.on('request', (req) => {
                 
                     results.forEach(function(element,index){
                         
-                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', type : '" + element.type + "', image1 : '" + element.image1 + "', image2 : '" + element.image2 + "', id_creator : '" + element.id_creator + "'}";
+                         let row = "{ id: '" + element.id + "', name : '" + element.name + "',type : '" + element.type + "', image1 : '" + element.image1 + "',image2 : '" + element.image2 + "', id_creator : '" + element.id_creator + "'}";
                    
                     console.log(row);
 
@@ -156,52 +157,32 @@ wsServer.on('request', (req) => {
              connectionToDB.query(
               'SELECT photo FROM users WHERE  id = '+mydata.id+';',
               function(err, results, fields) {
-                
-                  
-                        
                          let row = "{ image: '" + results[0].photo + "'}";
-                   
-                    
-
                     connection.sendUTF(
                         row
                     );
-
-                    
-
-                   
-
-                 
             }
                
             );
         }else if(mydata.purpose == "getListOfUsersInChat"){
              connectionToDB.query(
-              'select users.id,users.name,users.email,users.photo from users,user_in_chat where user_in_chat.id_chat = ' + mydata.id + ' and user_in_chat.id_user = users.id;',
+              'select users.id,users.name,users.email,users.photo from users,user_in_chatwhere user_in_chat.id_chat = ' + mydata.id + ' anduser_in_chat.id_user = users.id;',
               function(err, results, fields) {
                 
                     results.forEach(function(element,index){
                         
-                         let row = "{ id: '" + element.id + "', name : '" + element.name + "', email : '"+element.email+"' , image : '"+element.photo+"'}";
-                   
-                    
-
+                         let row = "{ id: '" + element.id + "',name : '" + element.name + "', email : '"+element.email+"' ,image : '"+element.photo+"'}";
                     connection.sendUTF(
                         row
                     );
-
                     });
-
-                   
-
-                 
             }
                
             );
         }else if(mydata.purpose == "message"){
 
         connectionToDB.query(
-              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +  mydata.id_user + ' , "' + mydata.message + '",null)',
+              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +mydata.id_user + ' , "' + mydata.message + '",null)',
               function(err, results, fields) {
                 
                }
@@ -217,7 +198,7 @@ wsServer.on('request', (req) => {
         })}else if(mydata.purpose == "messageImage"){
 
         connectionToDB.query(
-              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +  mydata.id_user + ' , default ,"' + mydata.image + '")',
+              'INSERT INTO messages VALUES(null,' +  mydata.id_chat + ' , ' +mydata.id_user + ' , default ,"' + mydata.image + '")',
               function(err, results, fields) {
                 
                }
@@ -234,14 +215,14 @@ wsServer.on('request', (req) => {
         else if(mydata.purpose == "getListOfMessages"){
 
         connectionToDB.query(
-              'SELECT messages.id,id_chat,id_user,users.name,message,image FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id order by messages.id;',
+              'SELECT messages.id,id_chat,id_user,users.name,message,image FROM messages,users where id_chat ='+mydata.id_chat+' andmessages.id_user = users.id order by messages.id;',
               function(err, results, fields) {
 
                   results.forEach(function(element,index){
                         
-                         let row = "{id: '" + element.id + "', id_chat : '" + element.id_chat + "', id_user : '" + element.id_user + "' , name_user : '" + element.name + "', message : '" + element.message + "', image : '" + element.image + "'}";
+                         let row = "{id: '" + element.id + "', id_chat : '" +element.id_chat + "', id_user : '" + element.id_user + "' , name_user : '" +element.name + "', message : '" + element.message + "',image : '" + element.image + "'}";
                    
-                    console.log(row);
+
 
                     connection.sendUTF(
                         row

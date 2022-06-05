@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -37,11 +38,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if(mSettings.contains(APP_PREFERENCES_ID)){
-            User.init((mSettings.getString(APP_PREFERENCES_ID, "")),(mSettings.getString(APP_PREFERENCES_NAME, "")),(mSettings.getString(APP_PREFERENCES_EMAIL, "")),(mSettings.getString(APP_PREFERENCES_PHOTO, "")),(mSettings.getString(APP_PREFERENCES_PASSWORD, "")));
+            User.init((mSettings.getString(APP_PREFERENCES_ID, "")),(mSettings.getString(APP_PREFERENCES_NAME, "")),
+                    (mSettings.getString(APP_PREFERENCES_EMAIL, "")),(mSettings.getString(APP_PREFERENCES_PHOTO, "")),
+                    (mSettings.getString(APP_PREFERENCES_PASSWORD, "")));
             Intent intent = new Intent(this, ListOfChatsActivity.class);
             startActivity(intent);
         }
@@ -52,14 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        findViewById(R.id.registerBtn)
-                .setOnClickListener(v -> {
 
-                    Intent intent = new Intent(this, RegistrationActivity.class);
-
-                    startActivity(intent);
-
-                });
     }
 
     private void initiateSocketConnection() {
@@ -70,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
+
+
     private class SocketListener extends WebSocketListener {
 
         @Override
@@ -77,10 +83,6 @@ public class MainActivity extends AppCompatActivity {
             super.onOpen(webSocket, response);
 
             runOnUiThread(() -> {
-                Toast.makeText(MainActivity.this,
-                        "Socket Connection Successful!",
-                        Toast.LENGTH_SHORT).show();
-
                 initializeView();
             });
 
@@ -95,7 +97,9 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(text);
                     if(jsonObject.getBoolean("ok")){
 
-                        User.init(jsonObject.getString("id"),jsonObject.getString("name"),jsonObject.getString("email"),jsonObject.getString("photo"),jsonObject.getString("password"));
+                        User.init(jsonObject.getString("id"),jsonObject.getString("name"),
+                                jsonObject.getString("email"),jsonObject.getString("photo"),
+                                jsonObject.getString("password"));
 
                         SharedPreferences.Editor editor = mSettings.edit();
                         editor.putString(APP_PREFERENCES_ID, jsonObject.getString("id"));
@@ -113,9 +117,6 @@ public class MainActivity extends AppCompatActivity {
                                 "Неправильный логин или пароль",
                                 Toast.LENGTH_SHORT).show();
                     }
-
-
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -139,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
         EditText editTextEmail = findViewById(R.id.editTextEmail);
         EditText editTextPassword = findViewById(R.id.editTextPassword);
 
+
+        findViewById(R.id.registerBtn)
+                .setOnClickListener(v -> {
+                    Intent intent = new Intent(this, RegistrationActivity.class);
+                    startActivity(intent);
+                });
 
         findViewById(R.id.enterBtn).setOnClickListener(v -> {
 

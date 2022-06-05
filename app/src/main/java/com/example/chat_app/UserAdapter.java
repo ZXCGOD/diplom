@@ -68,17 +68,14 @@ public class UserAdapter extends RecyclerView.Adapter{
                     new AlertDialog.Builder(parent)
                             .setTitle("Delete user")
                             .setMessage("Are you sure you want to delete this user from chat?")
-
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     JSONObject user = users.get(index);
                                     JSONObject jsonObject = new JSONObject();
-
                                     try {
                                         jsonObject.put("purpose","deleteUserFromChat");
                                         jsonObject.put("id_chat",Chat.instance().getId());
                                         jsonObject.put("id_user",user.getString("id"));
-
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -91,7 +88,6 @@ public class UserAdapter extends RecyclerView.Adapter{
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-
                                         webSocket.send(jsonObject.toString());
                                 }
                             })
@@ -108,23 +104,16 @@ public class UserAdapter extends RecyclerView.Adapter{
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View itemView;
-
-
         itemView = inflater.inflate(R.layout.item_user, parent, false);
-
-
-
         return new UserAdapter.UserHolder(itemView);
-
-
     }
 
 
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder,
+                                 @SuppressLint("RecyclerView") int position) {
 
         JSONObject user = users.get(position);
         try {

@@ -23,7 +23,6 @@ import java.util.List;
 
 public class ChatAdapter extends RecyclerView.Adapter{
 
-    ListOfChatsActivity listOfChatsActivity = new ListOfChatsActivity();
     private LayoutInflater inflater;
     private List<JSONObject> chats = new ArrayList<>();
     private Context parent;
@@ -34,7 +33,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
     }
 
     private  class ChatHolder extends RecyclerView.ViewHolder {
-
         TextView nameTxt;
         TextView idTxt;
         ImageView imageView;
@@ -69,7 +67,6 @@ public class ChatAdapter extends RecyclerView.Adapter{
                     }
 
                     Chat.init(id,name,type,image);
-                    Intent intent = new Intent(parent, ChatActivity.class);
 
                     ListOfChatsActivity.toChatActivity(parent);
 
@@ -86,13 +83,9 @@ public class ChatAdapter extends RecyclerView.Adapter{
 
         View itemView;
 
-
         itemView = inflater.inflate(R.layout.item_chat, parent, false);
 
-
-
                 return new ChatAdapter.ChatHolder(itemView);
-
 
         }
 

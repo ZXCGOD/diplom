@@ -16,50 +16,58 @@
 
 
     <EditText
+        android:id="@+id/editTextEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:hint="Enter your email"
-        android:textSize="16sp"
-
         android:layout_above="@id/editTextPassword"
-        android:id="@+id/editTextEmail"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/edittext_design"
-        android:padding="10dp"/>
+        android:hint="Введите ваш email"
+        android:padding="10dp"
+        android:textSize="16sp" />
 
 
     <EditText
+        android:id="@+id/editTextPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/enterBtn"
-        android:layout_margin="16dp"
-        android:hint="Enter your password"
-        android:textSize="16sp"
-        android:id="@+id/editTextPassword"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/edittext_design"
-        android:padding="10dp"/>
+        android:hint="Введите ваш пароль"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textSize="16sp" />
 
     <Button
+        android:id="@+id/enterBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:layout_centerVertical="true"
-        android:text="Enter"
-        android:textColor="#ffffff"
         android:background="@color/design_default_color_primary_dark"
-        android:id="@+id/enterBtn"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:text="Войти"
+        android:textColor="#ffffff" />
+
     <Button
+        android:id="@+id/registerBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/enterBtn"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        android:text="Register"
-        android:textColor="#ffffff"
         android:background="@color/design_default_color_primary_dark"
-        android:id="@+id/registerBtn"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:text="Зарегистрироваться"
+        android:textColor="#ffffff" />
 
 </RelativeLayout>

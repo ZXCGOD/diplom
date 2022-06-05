@@ -44,17 +44,14 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     private EditText messageEdit;
     private View sendBtn, pickImgBtn, backImgBtn, moreImgBtn;
     private RecyclerView recyclerView;
-    private int IMAGE_REQUEST_ID = 1;
     private MessageAdapter messageAdapter;
-    private ArrayList<User> userList;
     private TextView nameOfChatTxt;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         initiateSocketConnection();
-
-
     }
 
     @Override
@@ -78,20 +75,20 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     }
 
     private void initiateSocketConnection() {
-
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(SERVER_PATH).build();
         webSocket = client.newWebSocket(request, new SocketListener());
 
     }
 
+
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
     }
 
@@ -113,19 +110,14 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
     private void resetMessageEdit() {
 
         messageEdit.removeTextChangedListener(this);
-
         messageEdit.setText("");
         sendBtn.setVisibility(View.INVISIBLE);
         pickImgBtn.setVisibility(View.VISIBLE);
-
         messageEdit.addTextChangedListener(this);
 
     }
 
     private class SocketListener extends WebSocketListener {
-
-
-
 
         @Override
         public void onClosed(WebSocket webSocket, int code, String reason) {
@@ -148,17 +140,12 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                Toast.makeText(ChatActivity.this,
-                        "Socket Connection Successful!",
-                        Toast.LENGTH_SHORT).show();
-
                 initializeView();
             });
 
         }
 
-        @SuppressLint("NewApi")
+
         @Override
         public void onMessage(WebSocket webSocket, String text) {
             super.onMessage(webSocket, text);
@@ -169,20 +156,12 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                 try {
                     JSONObject jsonObject = new JSONObject(text);
 
-
-
                         if (jsonObject.getString("id_user").equals(User.instance().getId())) {
-
                             jsonObject.put("isSent", true);
-
                         } else {
-
                             jsonObject.put("isSent", false);
-
                         }
-
                         if (jsonObject.getString("id_chat").equals(Chat.instance().getId())) {
-
                               if(jsonObject.getString("message").equals("default_expression/ZXCGOD")){
                                   jsonObject.remove("message");
                                   messageAdapter.addItem(jsonObject);
@@ -190,9 +169,6 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                                   jsonObject.remove("image");
                                   messageAdapter.addItem(jsonObject);
                               }
-
-
-
                         }
                         recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
 
@@ -268,12 +244,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
         });
-
-
-
-
     }
 
     ActivityResultLauncher<Intent> sActivityResultLauncher = registerForActivityResult(
@@ -287,18 +258,15 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                         try {
                             InputStream is = getContentResolver().openInputStream(data.getData());
                             Bitmap image = BitmapFactory.decodeStream(is);
-
                             sendImage(image);
                             webSocket.close(1000,"ok");
                             initiateSocketConnection();
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }
             }
-
     );
 
     public void sendImage(Bitmap image) {
@@ -322,11 +290,8 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                 jsonObject.put("id_user", User.instance().getId());
                 jsonObject.put("id_chat", Chat.instance().getId());
                 jsonObject.put("image", base64String);
-
                 webSocket.send(jsonObject.toString());
                 jsonObject.put("isSent", true);
-
-
                 messageAdapter.addItem(jsonObject);
 
 
@@ -335,10 +300,5 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
             }
         }
     }
-
-    public void getListOfMessages(){
-
-    }
-
 
 }
