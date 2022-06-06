@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -165,9 +166,11 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                               if(jsonObject.getString("message").equals("default_expression/ZXCGOD")){
                                   jsonObject.remove("message");
                                   messageAdapter.addItem(jsonObject);
+                                  Log.i("asd",jsonObject.toString());
                               }else{
                                   jsonObject.remove("image");
                                   messageAdapter.addItem(jsonObject);
+
                               }
                         }
                         recyclerView.scrollToPosition(messageAdapter.getItemCount() - 1);
@@ -290,6 +293,7 @@ public class ChatActivity extends AppCompatActivity implements TextWatcher {
                 jsonObject.put("id_user", User.instance().getId());
                 jsonObject.put("id_chat", Chat.instance().getId());
                 jsonObject.put("image", base64String);
+                jsonObject.put("message","default_expression/ZXCGOD");
                 webSocket.send(jsonObject.toString());
                 jsonObject.put("isSent", true);
                 messageAdapter.addItem(jsonObject);

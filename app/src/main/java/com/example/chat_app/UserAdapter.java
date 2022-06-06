@@ -66,9 +66,9 @@ public class UserAdapter extends RecyclerView.Adapter{
                 public void onClick(View view) {
                     int index = getAdapterPosition();
                     new AlertDialog.Builder(parent)
-                            .setTitle("Delete user")
-                            .setMessage("Are you sure you want to delete this user from chat?")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setTitle("Удаление пользователя")
+                            .setMessage("Вы правда хотите удалить этого пользователя из беседы?")
+                            .setPositiveButton("Да", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                     JSONObject user = users.get(index);
                                     JSONObject jsonObject = new JSONObject();
@@ -92,7 +92,7 @@ public class UserAdapter extends RecyclerView.Adapter{
                                 }
                             })
 
-                            .setNegativeButton("No", null)
+                            .setNegativeButton("Нет", null)
                             .show();
                 }
             });

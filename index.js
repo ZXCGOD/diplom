@@ -166,7 +166,7 @@ wsServer.on('request', (req) => {
             );
         }else if(mydata.purpose == "getListOfUsersInChat"){
              connectionToDB.query(
-              'select users.id,users.name,users.email,users.photo from users,user_in_chatwhere user_in_chat.id_chat = ' + mydata.id + ' anduser_in_chat.id_user = users.id;',
+              'select users.id,users.name,users.email,users.photo from users,user_in_chat where user_in_chat.id_chat = ' + mydata.id + ' and user_in_chat.id_user = users.id;',
               function(err, results, fields) {
                 
                     results.forEach(function(element,index){
@@ -215,7 +215,7 @@ wsServer.on('request', (req) => {
         else if(mydata.purpose == "getListOfMessages"){
 
         connectionToDB.query(
-              'SELECT messages.id,id_chat,id_user,users.name,message,image FROM messages,users where id_chat ='+mydata.id_chat+' andmessages.id_user = users.id order by messages.id;',
+              'SELECT messages.id,id_chat,id_user,users.name,message,image FROM messages,users where id_chat ='+mydata.id_chat+' and messages.id_user = users.id order by messages.id;',
               function(err, results, fields) {
 
                   results.forEach(function(element,index){
